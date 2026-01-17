@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TimeDelta Premium</title>
+    <style>
+        :root {
+            /* Premium Color Palette */
+            --primary: #0066FF;
+            --primary-dark: #0052cc;
+            --primary-light: #e5f0ff;
+            --text-main: #1a1a1a;
+            --text-secondary: #6e6e73;
+            --bg-body: #f5f7fa;
+            --bg-card: #ffffff;
+            --shadow-soft: 0 10px 30px -10px rgba(0, 66, 255, 0.15);
+            --border-radius: 20px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+            outline: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .app-container {
+            background: var(--bg-card);
+            width: 100%;
+            max-width: 480px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            margin-top: 5vh;
+            animation: slideUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        header {
+            padding: 30px 24px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg-card) 0%, #fcfdff 100%);
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        main { padding: 24px; }
+
+        .input-group { margin-bottom: 24px; }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            background: var(--bg-body);
+            border-radius: 16px;
+            padding: 4px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        /* Type=time specific styling */
+        input[type="time"] {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 20px; /* Larger for time picker */
+            font-weight: 500;
+            color: var(--text-main);
+            appearance: none;
+            -webkit-appearance: none;
+            text-align: center; /* Center the time usually looks better on mobile */
+        }
+
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+        }
+
+        .btn-reset {
+            background: var(--primary-light);
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-reset:active { transform: scale(0.96); opacity: 0.8; }
+
+        .result-card {
+            background: var(--primary);
+            color: white;
+            border-radius: 20px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 15px 30px -5px rgba(0, 102, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+        }
+        
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .result-label {
+            font-size: 13px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .result-value-large {
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 4px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .result-detail {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .error-state {
+            background: #ffecf0;
+            color: #cc0033;
+            box-shadow: none;
+        }
+        
+        .error-state .result-value-large { font-size: 24px; }
+        .error-state .result-detail { display: none; }
+
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 12px;
+            color: #b0b0b5;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .updated { animation: pulse 0.3s ease-out; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <header>
+            <h1>Time Delta</h1>
+            <div class="subtitle">Time-Only Calculator</div>
+        </header>
+
+        <main>
+            <div class="input-group">
+                <label for="start-time">Start Time</label>
+                <div class="input-wrapper">
+                    <input type="time" id="start-time">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="target-time">Target Time</label>
+                <div class="input-wrapper">
+                    <input type="time" id="target-time">
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="btn-reset" id="btn-reset">Set to Now</button>
+            </div>
+
+            <div id="result-card" class="result-card">
+                <div class="result-label">Difference</div>
+                <div class="result-value-large" id="diff-hours">0.00 Hours</div>
+                <div class="result-detail" id="diff-detail">0h 0m</div>
+            </div>
+
+            <footer>
+                Premium Web App &bull; Local Calculation
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startTimeInput = document.getElementById('start-time');
+            const targetTimeInput = document.getElementById('target-time');
+            const resultCard = document.getElementById('result-card');
+            const diffHoursEl = document.getElementById('diff-hours');
+            const diffDetailEl = document.getElementById('diff-detail');
+            const btnReset = document.getElementById('btn-reset');
+
+            // Format current time as HH:MM
+            function getCurrentTimeString() {
+                const now = new Date();
+                const pad = (num) => num.toString().padStart(2, '0');
+                return `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+            }
+
+            // Create a Date object for today with specific time
+            function getDateFromTimeStr(timeStr) {
+                const [hours, minutes] = timeStr.split(':').map(Number);
+                const date = new Date();
+                date.setHours(hours);
+                date.setMinutes(minutes);
+                date.setSeconds(0);
+                date.setMilliseconds(0);
+                return date;
+            }
+
+            function init() {
+                const nowStr = getCurrentTimeString();
+                startTimeInput.value = nowStr;
+                
+                // Set target to now initially
+                targetTimeInput.value = nowStr;
+
+                // If you want target to default to +1 hour, uncomment below:
+                // const future = new Date(); future.setHours(future.getHours() + 1);
+                // targetTimeInput.value = `${String(future.getHours()).padStart(2,'0')}:${String(future.getMinutes()).padStart(2,'0')}`;
+
+                calculateDifference();
+            }
+
+            function calculateDifference() {
+                const startVal = startTimeInput.value;
+                const targetVal = targetTimeInput.value;
+
+                if (!startVal || !targetVal) {
+                    showError("Enter Time");
+                    return;
+                }
+
+                const start = getDateFromTimeStr(startVal);
+                const target = getDateFromTimeStr(targetVal);
+
+                // Calculate difference in milliseconds
+                let diffMs = target - start;
+                
+                // Determine if negative (Target is before Start)
+                const isNegative = diffMs < 0;
+                
+                // Use absolute value for calculations
+                diffMs = Math.abs(diffMs);
+
+                const msPerMin = 1000 * 60;
+                const msPerHour = 1000 * 60 * 60;
+
+                // Decimal Hours
+                const decimalHours = (diffMs / msPerHour).toFixed(2);
+
+                // Units
+                const hours = Math.floor(diffMs / msPerHour);
+                const minutes = Math.floor((diffMs % msPerHour) / msPerMin);
+
+                updateUI(isNegative, decimalHours, hours, minutes);
+            }
+
+            function updateUI(isNegative, decimalHours, h, m) {
+                resultCard.classList.remove('error-state');
+                
+                const prefix = isNegative ? "-" : "";
+                
+                diffHoursEl.textContent = `${prefix}${decimalHours} Hours`;
+                diffDetailEl.textContent = `${prefix}${h}h ${m}m`;
+
+                // Animation trigger
+                resultCard.classList.remove('updated');
+                void resultCard.offsetWidth; 
+                resultCard.classList.add('updated');
+            }
+
+            function showError(msg) {
+                resultCard.classList.add('error-state');
+                diffHoursEl.textContent = msg;
+                diffDetailEl.textContent = "";
+            }
+
+            // Events
+            startTimeInput.addEventListener('input', calculateDifference);
+            targetTimeInput.addEventListener('input', calculateDifference);
+            
+            btnReset.addEventListener('click', () => {
+                const nowStr = getCurrentTimeString();
+                startTimeInput.value = nowStr;
+                targetTimeInput.value = nowStr;
+                calculateDifference();
+                
+                btnReset.textContent = "Done";
+                setTimeout(() => btnReset.textContent = "Set to Now", 1000);
+            });
+
+            init();
+        });
+    </script>
+</body>
+</html>
