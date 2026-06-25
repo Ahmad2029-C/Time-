@@ -1,0 +1,318 @@
+index.html
+
+
+
+
+<html>
+<head>
+  <title>Student Result</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #e6f0ff; 
+      margin: 0;
+      padding: 0;
+    }
+    .center {
+      width: 360px;
+      margin: 40px auto;
+      text-align: center;
+    }
+    input {
+      display: block;
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+      border: 1px solid #3399ff; 
+    }
+    button {
+      padding: 8px 10px;
+      margin: 10px auto;
+      display: inline-block;
+      background: #3399ff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0073e6; 
+    }
+    .box {
+      background: #ffffff;
+      padding: 16px;
+      border: 1px solid #3399ff; 
+      border-radius: 5px;
+    }
+    .hidden {
+      display: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: #ffffff; 
+    }
+    table, th, td {
+      border: 1px solid #3399ff; 
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background: #3399ff;
+      color: white;
+    }
+    .buttons button {
+      margin: 6px;
+    }
+    h2 {
+      color: #0066cc; 
+    }
+    h3 {
+      color: #004d99; 
+    }
+  </style>
+</head>
+<body>
+
+<div id="login" class="center box">
+  <h2>Login</h2>
+  <input id="email" type="text" placeholder="Email">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<div id="menu" class="center box hidden">
+  <h2>Menu</h2>
+  <div class="buttons">
+    <button onclick="showCalc()">Calculate Grade</button>
+    <button onclick="showCheck()">Check Grade</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div id="calc" class="center box hidden" style="width:700px">
+  <h2>Student Result Card</h2>
+  <input id="sname" type="text" placeholder="Name">
+  <input id="sclass" type="text" placeholder="Class/Section">
+  <input id="sroll" type="text" placeholder="Roll Number">
+
+  <h3>Enter Marks</h3>
+  <input id="chem" type="text" placeholder="Chemistry (0-75)">
+  <input id="compbio" type="text" placeholder="Computer/Biology (0-75)">
+  <input id="phys" type="text" placeholder="Physics (0-75)">
+  <input id="math" type="text" placeholder="Mathematics (0-75)">
+  <input id="eng" type="text" placeholder="English (0-75)">
+  <input id="urdu" type="text" placeholder="Urdu (0-75)">
+  <input id="isl" type="text" placeholder="Islamiyat (0-100)">
+  <input id="tar" type="text" placeholder="Tarjuma-tul-Quran (0-50)">
+
+  <button onclick="generate()">Generate Result</button>
+  <button onclick="backFromCalc()">Back to Menu</button>
+
+  <div id="summary" style="text-align:left;margin-top:12px">
+    <div id="nameOut">Name: -</div>
+    <div id="classOut">Class: -</div>
+    <div id="rollOut">Roll No: -</div>
+    <div id="totalOut">Total Marks: 0 / 600</div>
+    <div id="percOut">Percentage: 0%</div>
+    <div id="gradeOut">Grade: -</div>
+    <div id="remOut">Remarks: -</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Subject</th><th>Obtained</th><th>Total</th><th>%</th><th>Grade</th><th>Remarks</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Chemistry</td><td id="rchem">0</td><td>75</td><td id="pchem">0%</td><td id="gchem">-</td><td id="rcem">-</td></tr>
+      <tr><td>Computer/Biology</td><td id="rcomp">0</td><td>75</td><td id="pcomp">0%</td><td id="gcomp">-</td><td id="rcompm">-</td></tr>
+      <tr><td>Physics</td><td id="rphys">0</td><td>75</td><td id="pphys">0%</td><td id="gphys">-</td><td id="rphysm">-</td></tr>
+      <tr><td>Mathematics</td><td id="rmath">0</td><td>75</td><td id="pmath">0%</td><td id="gmath">-</td><td id="rmathm">-</td></tr>
+      <tr><td>English</td><td id="reng">0</td><td>75</td><td id="peng">0%</td><td id="geng">-</td><td id="rengm">-</td></tr>
+      <tr><td>Urdu</td><td id="rurdu">0</td><td>75</td><td id="purdu">0%</td><td id="gurdu">-</td><td id="rurdum">-</td></tr>
+      <tr><td>Islamiyat</td><td id="risl">0</td><td>100</td><td id="pisl">0%</td><td id="gisl">-</td><td id="rislm">-</td></tr>
+      <tr><td>Tarjuma-tul-Quran</td><td id="rtar">0</td><td>50</td><td id="ptar">0%</td><td id="gtar">-</td><td id="rtarm">-</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="check" class="center box hidden" style="width:460px">
+  <h2>Check Result</h2>
+  <input id="adm" type="text" placeholder="Admission No">
+  <input id="dfather" type="text" placeholder="Father's Name">
+  <button onclick="check()">Check</button>
+  <button onclick="backFromCheck()">Back to Menu</button>
+  <div id="checkRes" style="text-align:left;margin-top:10px"></div>
+</div>
+
+<script>
+function login() {
+  var e = document.getElementById('email').value;
+  if(e=="") { alert('Enter email'); }
+  else {
+    document.getElementById('login').className='center box hidden';
+    document.getElementById('menu').className='center box';
+  }
+}
+function logout() {
+  document.getElementById('menu').className='center box hidden';
+  document.getElementById('calc').className='center box hidden';
+  document.getElementById('check').className='center box hidden';
+  document.getElementById('login').className='center box';
+  document.getElementById('email').value='';
+  document.getElementById('pass').value='';
+}
+function showCalc(){ document.getElementById('menu').className='center box hidden'; document.getElementById('calc').className='center box'; }
+function showCheck(){ document.getElementById('menu').className='center box hidden'; document.getElementById('check').className='center box'; }
+function backFromCalc(){ document.getElementById('calc').className='center box hidden'; document.getElementById('menu').className='center box'; }
+function backFromCheck(){ document.getElementById('check').className='center box hidden'; document.getElementById('menu').className='center box'; }
+
+function gradeCalc(p){
+  var g='F'; var r='Fail';
+  if(p>=90){ g='A+'; r='Excellent'; }
+  else if(p>=80){ g='A'; r='Very Good'; }
+  else if(p>=70){ g='B'; r='Good'; }
+  else if(p>=60){ g='C'; r='Average'; }
+  else if(p>=50){ g='D'; r='Pass'; }
+  else { g='F'; r='Fail'; }
+  return [g,r];
+}
+
+function numFix(v){
+  var n = Number(v);
+  if(isNaN(n) || n<0) n=0;
+  return n;
+}
+
+function generate(){
+  var sname=document.getElementById('sname').value||'-';
+  var sclass=document.getElementById('sclass').value||'-';
+  var sroll=document.getElementById('sroll').value||'-';
+
+  var chem=numFix(document.getElementById('chem').value); if(chem>75) chem=75;
+  var comp=numFix(document.getElementById('compbio').value); if(comp>75) comp=75;
+  var phys=numFix(document.getElementById('phys').value); if(phys>75) phys=75;
+  var math=numFix(document.getElementById('math').value); if(math>75) math=75;
+  var eng=numFix(document.getElementById('eng').value); if(eng>75) eng=75;
+  var urdu=numFix(document.getElementById('urdu').value); if(urdu>75) urdu=75;
+  var isl=numFix(document.getElementById('isl').value); if(isl>100) isl=100;
+  var tar=numFix(document.getElementById('tar').value); if(tar>50) tar=50;
+
+  var total=chem+comp+phys+math+eng+urdu+isl+tar;
+  var max=75*6+100+50;
+  var per=(total/max)*100;
+
+  var pgchem=(chem/75)*100; var pgcomp=(comp/75)*100; var pgphys=(phys/75)*100;
+  var pgmath=(math/75)*100; var pgend=(eng/75)*100; var pgurdu=(urdu/75)*100;
+  var pgisl=(isl/100)*100; var pgtar=(tar/50)*100;
+
+  var ggchem=gradeCalc(pgchem); var ggcomp=gradeCalc(pgcomp); var ggphys=gradeCalc(pgphys);
+  var ggmath=gradeCalc(pgmath); var ggeng=gradeCalc(pgend); var ggurdu=gradeCalc(pgurdu);
+  var ggisl=gradeCalc(pgisl); var ggtar=gradeCalc(pgtar);
+
+  var gOver=gradeCalc(per);
+
+  document.getElementById('nameOut').innerText='Name: '+sname;
+  document.getElementById('classOut').innerText='Class: '+sclass;
+  document.getElementById('rollOut').innerText='Roll No: '+sroll;
+  document.getElementById('totalOut').innerText='Total Marks: '+total+' / '+max;
+  document.getElementById('percOut').innerText='Percentage: '+per.toFixed(2)+'%';
+  document.getElementById('gradeOut').innerText='Grade: '+gOver[0];
+  document.getElementById('remOut').innerText='Remarks: '+gOver[1];
+
+  document.getElementById('rchem').innerText=chem; document.getElementById('pchem').innerText=pgchem.toFixed(1)+'%';
+  document.getElementById('gchem').innerText=ggchem[0]; document.getElementById('rcem').innerText=ggchem[1];
+
+  document.getElementById('rcomp').innerText=comp; document.getElementById('pcomp').innerText=pgcomp.toFixed(1)+'%';
+  document.getElementById('gcomp').innerText=ggcomp[0]; document.getElementById('rcompm').innerText=ggcomp[1];
+
+  document.getElementById('rphys').innerText=phys; document.getElementById('pphys').innerText=pgphys.toFixed(1)+'%';
+  document.getElementById('gphys').innerText=ggphys[0]; document.getElementById('rphysm').innerText=ggphys[1];
+
+  document.getElementById('rmath').innerText=math; document.getElementById('pmath').innerText=pgmath.toFixed(1)+'%';
+  document.getElementById('gmath').innerText=ggmath[0]; document.getElementById('rmathm').innerText=ggmath[1];
+
+  document.getElementById('reng').innerText=eng; document.getElementById('peng').innerText=pgend.toFixed(1)+'%';
+  document.getElementById('geng').innerText=ggeng[0]; document.getElementById('rengm').innerText=ggeng[1];
+
+  document.getElementById('rurdu').innerText=urdu; document.getElementById('purdu').innerText=pgurdu.toFixed(1)+'%';
+  document.getElementById('gurdu').innerText=ggurdu[0]; document.getElementById('rurdum').innerText=ggurdu[1];
+
+  document.getElementById('risl').innerText=isl; document.getElementById('pisl').innerText=pgisl.toFixed(1)+'%';
+  document.getElementById('gisl').innerText=ggisl[0]; document.getElementById('rislm').innerText=ggisl[1];
+
+  document.getElementById('rtar').innerText=tar; document.getElementById('ptar').innerText=pgtar.toFixed(1)+'%';
+  document.getElementById('gtar').innerText=ggtar[0]; document.getElementById('rtarm').innerText=ggtar[1];
+}
+
+function check(){
+  var adm = document.getElementById('adm').value;
+  var father = document.getElementById('dfather').value.toLowerCase();
+  var outDiv = document.getElementById('checkRes');
+
+  if(adm=="" || father==""){
+    outDiv.innerHTML='<b>Enter admission and father name</b>';
+    return;
+  }
+
+  fetch('students.json')
+    .then(response => response.json())
+    .then(data => {
+      var found = false;
+      for(var i=0;i<data.length;i++){
+        var s = data[i];
+        if(s.admission==adm && s.father.toLowerCase()==father){
+          found = true;
+          var total = s.math+s.physics+s.chemistry+s.english+s.urdu;
+          var per = (total/500)*100;
+          var html = '<h3>Result for '+s.name+'</h3>';
+          html += 'Class: '+s.class+'<br>Admission No: '+s.admission+'<br>Father: '+s.father+'<br><br>';
+          html += 'Math: '+s.math+'<br>Physics: '+s.physics+'<br>Chemistry: '+s.chemistry+'<br>English: '+s.english+'<br>Urdu: '+s.urdu+'<br>';
+          html += 'Total: '+total+'/500<br>Percentage: '+per.toFixed(2)+'%<br>Grade: '+gradeCalc(per)[0];
+          outDiv.innerHTML = html;
+          break;
+        }
+      }
+      if(!found) outDiv.innerHTML='<b>No student found.</b>';
+    });
+}
+</script>
+
+</body>
+</html>
+
+
+students.Json
+
+[
+  {"admission":"CS001","name":"Ayesha Khan","father":"Mr. Khan","class":"9th","math":85,"physics":78,"chemistry":90,"english":88,"urdu":76},
+  {"admission":"CS002","name":"Bilal Ahmed","father":"Mr. Ahmed","class":"9th","math":92,"physics":85,"chemistry":88,"english":90,"urdu":81},
+  {"admission":"CS003","name":"Celine Ali","father":"Mr. Ali","class":"9th","math":74,"physics":80,"chemistry":79,"english":75,"urdu":83},
+  {"admission":"CS004","name":"Danish Zaheer","father":"Mr. Zaheer","class":"9th","math":65,"physics":70,"chemistry":68,"english":72,"urdu":69},
+  {"admission":"CS005","name":"Eshaal Fatima","father":"Mr. Fatima","class":"9th","math":95,"physics":93,"chemistry":97,"english":94,"urdu":90},
+  {"admission":"CS006","name":"Farhan Iqbal","father":"Mr. Iqbal","class":"9th","math":78,"physics":82,"chemistry":80,"english":79,"urdu":77},
+  {"admission":"CS007","name":"Gohar Rehman","father":"Mr. Rehman","class":"9th","math":84,"physics":86,"chemistry":83,"english":81,"urdu":80},
+  {"admission":"CS008","name":"Hira Sultan","father":"Mr. Sultan","class":"9th","math":71,"physics":73,"chemistry":75,"english":70,"urdu":72},
+  {"admission":"CS009","name":"Imran Nazir","father":"Mr. Nazir","class":"9th","math":88,"physics":90,"chemistry":89,"english":87,"urdu":85},
+  {"admission":"CS010","name":"Javeria Khan","father":"Mr. Khan","class":"9th","math":79,"physics":76,"chemistry":81,"english":83,"urdu":78},
+  {"admission":"CS011","name":"Khalid Mahmood","father":"Mr. Mahmood","class":"9th","math":66,"physics":69,"chemistry":70,"english":68,"urdu":71},
+  {"admission":"CS012","name":"Layla Noor","father":"Mr. Noor","class":"9th","math":93,"physics":91,"chemistry":95,"english":92,"urdu":89},
+  {"admission":"CS013","name":"Muneeb Ali","father":"Mr. Ali","class":"9th","math":75,"physics":77,"chemistry":74,"english":76,"urdu":73},
+  {"admission":"CS014","name":"Nadia Hussain","father":"Mr. Hussain","class":"9th","math":82,"physics":84,"chemistry":86,"english":80,"urdu":79},
+  {"admission":"CS015","name":"Omar Farooq","father":"Mr. Farooq","class":"9th","math":69,"physics":71,"chemistry":72,"english":73,"urdu":70},
+  {"admission":"CS016","name":"Priya Singh","father":"Mr. Singh","class":"9th","math":90,"physics":88,"chemistry":91,"english":89,"urdu":86},
+  {"admission":"CS017","name":"Qasim Abbas","father":"Mr. Abbas","class":"9th","math":77,"physics":75,"chemistry":78,"english":74,"urdu":76},
+  {"admission":"CS018","name":"Rabia Karim","father":"Mr. Karim","class":"9th","math":83,"physics":81,"chemistry":84,"english":82,"urdu":80},
+  {"admission":"CS019","name":"Saad Ali","father":"Mr. Ali","class":"9th","math":68,"physics":67,"chemistry":69,"english":71,"urdu":66},
+  {"admission":"CS020","name":"Sana Ullah","father":"Mr. Ullah","class":"9th","math":94,"physics":96,"chemistry":93,"english":95,"urdu":91},
+  {"admission":"CS021","name":"Tariq Javed","father":"Mr. Javed","class":"9th","math":80,"physics":79,"chemistry":82,"english":78,"urdu":77},
+  {"admission":"CS022","name":"Urooj Fatima","father":"Mr. Fatima","class":"9th","math":72,"physics":74,"chemistry":73,"english":75,"urdu":71},
+  {"admission":"CS023","name":"Faizan Khan","father":"Mr. Khan","class":"9th","math":87,"physics":85,"chemistry":89,"english":86,"urdu":84},
+  {"admission":"CS024","name":"Ghazala Naz","father":"Mr. Naz","class":"9th","math":76,"physics":74,"chemistry":75,"english":73,"urdu":72},
+  {"admission":"CS025","name":"Hassan Raza","father":"Mr. Raza","class":"9th","math":91,"physics":89,"chemistry":90,"english":88,"urdu":87},
+  {"admission":"CS026","name":"Inaya Sheikh","father":"Mr. Sheikh","class":"9th","math":84,"physics":82,"chemistry":85,"english":81,"urdu":83},
+  {"admission":"CS027","name":"Junaid Iqbal","father":"Mr. Iqbal","class":"9th","math":78,"physics":77,"chemistry":80,"english":79,"urdu":76},
+  {"admission":"CS028","name":"Kiran Malik","father":"Mr. Malik","class":"9th","math":88,"physics":86,"chemistry":87,"english":85,"urdu":84},
+  {"admission":"CS029","name":"Lubna Tariq","father":"Mr. Tariq","class":"9th","math":73,"physics":75,"chemistry":72,"english":74,"urdu":70},
+  {"admission":"CS030","name":"Mohsin Khan","father":"Mr. Khan","class":"9th","math":82,"physics":80,"chemistry":84,"english":81,"urdu":79}
+]
